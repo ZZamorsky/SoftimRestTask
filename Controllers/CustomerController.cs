@@ -19,35 +19,20 @@ namespace SoftimRestTask.Controllers
         }
 
         // GET: api/Customer/5
-        public Customer Get(long id)
-        {
-            CustomerPersistence customerPersistence = new CustomerPersistence();
-            Customer customer = customerPersistence.GetCustomer(id);
-            return customer;
-        }
+        //public Customer Get(long id)
+        //{
+        //    CustomerPersistence customerPersistence = new CustomerPersistence();
+        //    Customer customer = customerPersistence.GetCustomer(id);
+        //    return customer;
+        //}
 
         // POST: api/Customer
-        public HttpResponseMessage Post([FromBody]Customer value)
+        public HttpResponseMessage Post([FromBody]List<Customer> value)
         {
             CustomerPersistence customerPersistence = new CustomerPersistence();
-            long id;
-            id = customerPersistence.SaveCustomer(value);
-            value.Id = id;
+            customerPersistence.SaveCustomers(value);
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created);
-            response.Headers.Location = new Uri(Request.RequestUri, String.Format("Customer/{0}",id));
             return response;
-
-
-        }
-
-        // PUT: api/Customer/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/Customer/5
-        public void Delete(int id)
-        {
         }
     }
 }

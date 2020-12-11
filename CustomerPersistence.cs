@@ -28,13 +28,15 @@ namespace SoftimRestTask
                 SqlException ex;
             }
         }
-        public long SaveCustomer(Customer customerToSave)
+        public void SaveCustomers(List<Customer> customersToSave)
+            
         {
-            String sqlString = "INSERT INTO Customers (VisitDateTime,Age,WasSatisfied,Sex) OUTPUT INSERTED.ID VALUES ('" + customerToSave.VisitDateTime.ToString("dd.MM.yyyy HH:mm:ss") + "','" + customerToSave.Age + "','" + customerToSave.WasSatisfied + "','" + customerToSave.Sex + "')";
-            SqlCommand cmd = new SqlCommand(sqlString, conn);
-            cmd.ExecuteNonQuery();
-            long id = Convert.ToInt32(cmd.ExecuteScalar());
-            return id;
+            foreach (Customer customerToSave in customersToSave)
+            {
+                String sqlString = "INSERT INTO Customers (VisitDateTime,Age,WasSatisfied,Sex) VALUES ('" + customerToSave.VisitDateTime.ToString("dd.MM.yyyy HH:mm:ss") + "','" + customerToSave.Age + "','" + customerToSave.WasSatisfied + "','" + customerToSave.Sex + "')";
+                SqlCommand cmd = new SqlCommand(sqlString, conn);
+                cmd.ExecuteNonQuery();
+            }
         }
         public Customer GetCustomer(long id)
         {
