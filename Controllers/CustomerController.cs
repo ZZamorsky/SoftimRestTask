@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -11,21 +12,17 @@ namespace SoftimRestTask.Controllers
     public class CustomerController : ApiController
     {
         // GET: api/Customer
-        public IEnumerable<string> Get()
+        public ArrayList Get()
         {
-            return new string[] { "value1", "value2" };
+            CustomerPersistence customerPersistence = new CustomerPersistence();
+            return customerPersistence.GetCustomers();
         }
 
         // GET: api/Customer/5
-        public Customer Get(int id)
+        public Customer Get(long id)
         {
-            Customer customer = new Customer();
-            customer.Id = id;
-            customer.VisitDateTime = DateTime.Parse("2020/02/12");
-            customer.WasSatisfied = true;
-            customer.Age = 12;
-            customer.Sex = "M"; 
-            
+            CustomerPersistence customerPersistence = new CustomerPersistence();
+            Customer customer = customerPersistence.GetCustomer(id);
             return customer;
         }
 

@@ -1,5 +1,6 @@
 ﻿using SoftimRestTask.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -29,11 +30,48 @@ namespace SoftimRestTask
         }
         public long SaveCustomer(Customer customerToSave)
         {
-            String sqlString = "INSERT INTO Customers (VisitDateTime,Age,WasSatisfied,Sex) VALUES ('" + customerToSave.VisitDateTime.ToString("dd.MM.yyyy HH:mm:ss") + "','" + customerToSave.Age + "','" + customerToSave.WasSatisfied + "','" + customerToSave.Sex + "') SELECT SCOPE_IDENTITY()";
+            String sqlString = "INSERT INTO Customers (VisitDateTime,Age,WasSatisfied,Sex) OUTPUT INSERTED.ID VALUES ('" + customerToSave.VisitDateTime.ToString("dd.MM.yyyy HH:mm:ss") + "','" + customerToSave.Age + "','" + customerToSave.WasSatisfied + "','" + customerToSave.Sex + "')";
             SqlCommand cmd = new SqlCommand(sqlString, conn);
             cmd.ExecuteNonQuery();
             long id = Convert.ToInt32(cmd.ExecuteScalar());
             return id;
+        }
+        public Customer GetCustomer(long id)
+        {
+            Customer customer = new Customer();
+            SqlDataReader sqlDataReader = null;
+            string sqlString = "SELECT * from Customers WHERE ID = " + id.ToString();
+            SqlCommand sqlCommand = new SqlCommand(sqlString, conn);
+            sqlDataReader = sqlCommand.ExecuteReader();
+            if (sqlDataReader.Read())
+            {
+                customer.Id = sqlDataReader.GetInt32(0);
+                customer.VisitDateTime = sqlDataReader.GetDateTime(1);
+                customer.Age = sqlDataReader.GetInt32(2);
+                customer.WasSatisfied = sqlDataReader.GetBoolean(3);
+                customer.Sex = sqlDataReader.GetString(4);
+                return customer;
+            }
+            else return null;
+        }
+        public ArrayList GetCustomers()
+        {
+            ArrayList customersArray = new ArrayList();
+            SqlDataReader sqlDataReader = null;
+            string sqlString = "SELECT * from Customers";
+            SqlCommand sqlCommand = new SqlCommand(sqlString, conn);
+            sqlDataReader = sqlCommand.ExecuteReader();
+            while (sqlDataReader.Read())
+            {
+                Customer customer = new Customer();
+                customer.Id = sqlDataReader.GetInt32(0);
+                customer.VisitDateTime = sqlDataReader.GetDateTime(1);
+                customer.Age = sqlDataReader.GetInt32(2);
+                customer.WasSatisfied = sqlDataReader.GetBoolean(3);
+                customer.Sex = sqlDataReader.GetString(4);
+                customersArray.Add(customer);
+            }
+            return customersArray;
         }
     }
 }
