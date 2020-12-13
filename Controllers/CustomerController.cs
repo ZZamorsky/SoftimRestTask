@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -8,49 +9,35 @@ using SoftimRestTask.Models;
 
 namespace SoftimRestTask.Controllers
 {
+    /// <summary>
+    /// Controller for REST method
+    /// </summary>
+   
     public class CustomerController : ApiController
     {
-        // GET: api/Customer
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
 
-        // GET: api/Customer/5
-        public Customer Get(int id)
-        {
-            Customer customer = new Customer();
-            customer.Id = id;
-            customer.VisitDateTime = DateTime.Parse("2020/02/12");
-            customer.WasSatisfied = true;
-            customer.Age = 12;
-            customer.Sex = "M"; 
-            
-            return customer;
-        }
-
-        // POST: api/Customer
-        public HttpResponseMessage Post([FromBody]Customer value)
+        /// <summary>
+        /// Loading All users from database sorted bz ID
+        /// </summary>
+        /// <returns></returns>
+        public ArrayList Get()
         {
             CustomerPersistence customerPersistence = new CustomerPersistence();
-            long id;
-            id = customerPersistence.SaveCustomer(value);
-            value.Id = id;
+            return customerPersistence.GetCustomers();
+             
+        }
+
+        /// <summary>
+        /// Insert values in list into a database (must be a list of Customers)
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public HttpResponseMessage Post([FromBody]List<Customer> value)
+        {
+            CustomerPersistence customerPersistence = new CustomerPersistence();
+            customerPersistence.SaveCustomers(value);
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created);
-            response.Headers.Location = new Uri(Request.RequestUri, String.Format("Customer/{0}",id));
             return response;
-
-
-        }
-
-        // PUT: api/Customer/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/Customer/5
-        public void Delete(int id)
-        {
         }
     }
 }
