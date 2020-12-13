@@ -9,24 +9,29 @@ using SoftimRestTask.Models;
 
 namespace SoftimRestTask.Controllers
 {
+    /// <summary>
+    /// Controller for REST method
+    /// </summary>
+   
     public class CustomerController : ApiController
     {
-        // GET: api/Customer
+
+        /// <summary>
+        /// Loading All users from database sorted bz ID
+        /// </summary>
+        /// <returns></returns>
         public ArrayList Get()
         {
             CustomerPersistence customerPersistence = new CustomerPersistence();
             return customerPersistence.GetCustomers();
+             
         }
 
-        // GET: api/Customer/5
-        //public Customer Get(long id)
-        //{
-        //    CustomerPersistence customerPersistence = new CustomerPersistence();
-        //    Customer customer = customerPersistence.GetCustomer(id);
-        //    return customer;
-        //}
-
-        // POST: api/Customer
+        /// <summary>
+        /// Insert values in list into a database (must be a list of Customers)
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public HttpResponseMessage Post([FromBody]List<Customer> value)
         {
             CustomerPersistence customerPersistence = new CustomerPersistence();

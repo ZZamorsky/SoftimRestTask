@@ -8,10 +8,15 @@ using System.Web;
 
 namespace SoftimRestTask
 {
+    /// <summary>
+    /// Layer for communication with database for Customer
+    /// </summary>
     public class CustomerPersistence
     {
         private SqlConnection conn;
-
+        /// <summary>
+        /// Provide connection with database
+        /// </summary>
         public CustomerPersistence()
         {
             string myConnectionString;
@@ -28,34 +33,25 @@ namespace SoftimRestTask
                 SqlException ex;
             }
         }
+        /// <summary>
+        /// Saving List Customers into database
+        /// </summary>
+        /// <param name="customersToSave"></param>
         public void SaveCustomers(List<Customer> customersToSave)
             
         {
             foreach (Customer customerToSave in customersToSave)
             {
-                String sqlString = "INSERT INTO Customers (VisitDateTime,Age,WasSatisfied,Sex) VALUES ('" + customerToSave.VisitDateTime.ToString("dd.MM.yyyy HH:mm:ss") + "','" + customerToSave.Age + "','" + customerToSave.WasSatisfied + "','" + customerToSave.Sex + "')";
+                String sqlString = "INSERT INTO Customers (VisitDateTime,Age,WasSatisfied,Sex) VALUES ('" + customerToSave.VisitDateTime.ToString("yyyy.MM.dd HH:mm:ss") + "','" + customerToSave.Age + "','" + customerToSave.WasSatisfied + "','" + customerToSave.Sex + "')";
                 SqlCommand cmd = new SqlCommand(sqlString, conn);
                 cmd.ExecuteNonQuery();
             }
         }
-        public Customer GetCustomer(long id)
-        {
-            Customer customer = new Customer();
-            SqlDataReader sqlDataReader = null;
-            string sqlString = "SELECT * from Customers WHERE ID = " + id.ToString();
-            SqlCommand sqlCommand = new SqlCommand(sqlString, conn);
-            sqlDataReader = sqlCommand.ExecuteReader();
-            if (sqlDataReader.Read())
-            {
-                customer.Id = sqlDataReader.GetInt32(0);
-                customer.VisitDateTime = sqlDataReader.GetDateTime(1);
-                customer.Age = sqlDataReader.GetInt32(2);
-                customer.WasSatisfied = sqlDataReader.GetBoolean(3);
-                customer.Sex = sqlDataReader.GetString(4);
-                return customer;
-            }
-            else return null;
-        }
+
+        /// <summary>
+        /// Loading Arraylist of all Customers from database
+        /// </summary>
+        /// <returns></returns>
         public ArrayList GetCustomers()
         {
             ArrayList customersArray = new ArrayList();
